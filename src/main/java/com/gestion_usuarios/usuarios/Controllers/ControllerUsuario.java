@@ -1,7 +1,9 @@
 package com.gestion_usuarios.usuarios.Controllers;
 
 import com.gestion_usuarios.usuarios.Models.Usuario;
+import com.gestion_usuarios.usuarios.Models.Rol;
 import com.gestion_usuarios.usuarios.Repositorios.RepositorioUsuario;
+import com.gestion_usuarios.usuarios.Repositorios.RepositorioRol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 public class ControllerUsuario {
     @Autowired
     private RepositorioUsuario miRepositorioUsuario;
+    @Autowired
+    private RepositorioRol miRepositorioRol;
     @GetMapping("")
     public List<Usuario> index(){
         return this.miRepositorioUsuario.findAll();
@@ -25,6 +29,15 @@ public class ControllerUsuario {
         infoUsuario.setContrasena(convertirSHA256(infoUsuario.getContrasena()));
         return this.miRepositorioUsuario.save(infoUsuario);
     }
+
+    @PostMapping("{id_usuario}/rol/{id_rol}")
+    public Usuario asignarRol(@PathVariable String id_usuario, @PathVariable String id_rol){
+        Usuario usuarioActual = miRepositorioUsuario.findById(id_usuario).orElseThrow(RuntimeException::new);
+        Rol rolActual = miRepositorioRol.findById(id_rol).orElseThrow(RuntimeException::new);
+        usuarioActual.setRol(rolActual);
+        return this.miRepositorioUsuario.save(usuarioActual);
+    }
+
     @GetMapping("{id}")
     public Usuario show(@PathVariable String id){
         Usuario usuarioActual=this.miRepositorioUsuario
