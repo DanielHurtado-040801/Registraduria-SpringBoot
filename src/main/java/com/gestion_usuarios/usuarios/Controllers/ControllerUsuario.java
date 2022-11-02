@@ -19,10 +19,12 @@ public class ControllerUsuario {
     private RepositorioUsuario miRepositorioUsuario;
     @Autowired
     private RepositorioRol miRepositorioRol;
+    
     @GetMapping("")
     public List<Usuario> index(){
         return this.miRepositorioUsuario.findAll();
     }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Usuario create(@RequestBody Usuario infoUsuario){
@@ -38,6 +40,7 @@ public class ControllerUsuario {
         return this.miRepositorioUsuario.save(usuarioActual);
     }
 
+
     @GetMapping("{id}")
     public Usuario show(@PathVariable String id){
         Usuario usuarioActual=this.miRepositorioUsuario
@@ -45,6 +48,8 @@ public class ControllerUsuario {
                 .orElse(null);
         return usuarioActual;
     }
+
+
     @PutMapping("{id}")
     public Usuario update(@PathVariable String id,@RequestBody Usuario
             infoUsuario){
@@ -61,6 +66,8 @@ public class ControllerUsuario {
             return null;
         }
     }
+    
+    
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id){
@@ -71,6 +78,8 @@ public class ControllerUsuario {
             this.miRepositorioUsuario.delete(usuarioActual);
         }
     }
+   
+   
     public String convertirSHA256(String password) {
         MessageDigest md = null;
         try {
