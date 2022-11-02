@@ -9,6 +9,12 @@ public class Permiso {
     @Id
     private String id;
     private String url;
+    private String metodo;
+
+    public Permiso(String url, String metodo) {
+        this.url = url;
+        this.metodo = metodo;
+    }
 
     public String getId() {
         return id;
@@ -34,10 +40,4 @@ public class Permiso {
         this.metodo = metodo;
     }
 
-    public Permiso(String url, String metodo) {
-        this.url = url;
-        this.metodo = metodo;
-    }
-
-    private String metodo;
 }
