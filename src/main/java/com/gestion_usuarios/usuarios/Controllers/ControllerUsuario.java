@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 @CrossOrigin
@@ -95,5 +99,22 @@ public class ControllerUsuario {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
+    }
+
+    @PostMapping("/login")
+    public Usuario login(@RequestBody Usuario usuario, HttpServletResponse respuesta) throws IOException{
+        Usuario usuarioConsulta = miRepositorioUsuario.BuscarUsuarioCorreo(usuario.getCorreo());
+/*         System.out.println(usuarioConsulta);
+        System.out.println("Contraseña login: " + convertirSHA256(usuario.getContrasena())); 
+        System.out.println("Contraseña real: " + usuarioConsulta.getContrasena()); */
+        if(usuarioConsulta != null && convertirSHA256(usuario.getContrasena()).equals(usuarioConsulta.getContrasena())){
+            usuarioConsulta.setContrasena("");
+            return usuarioConsulta;
+        }
+        else{
+            System.out.println("Usuario no registrado");
+            respuesta.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+        }
     }
 }
